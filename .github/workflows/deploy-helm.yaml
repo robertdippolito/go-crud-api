@@ -28,7 +28,7 @@ jobs:
           helm upgrade --install k8s-api ./_infra/k8s-api-chart \
             --namespace api \
             --create-namespace \
-            --values values.yaml \
+            --values ./_infra/k8s-api-chart/values.yaml \
             --set image.tag=${{ github.sha }} \
             --set ingress.hosts[0].host=${{ secrets.INGRESS_HOST }}
             --set image.repository=${{ secrets.ECR_REPOSITORY }}
