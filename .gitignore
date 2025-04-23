@@ -1,0 +1,53 @@
+# --- Go build artifacts ---
+# ignore the compiled binary(s) and test binaries
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+# if you name your binary after the repo…
+k8s-api
+
+# --- Dependency directories (if vendoring) ---
+/vendor/
+
+# --- Infrastructure artifacts ---
+# if you ever package Helm charts or k8s resources
+*.tgz
+charts/
+
+# --- Docker / environment ---
+.env
+docker-compose.override.yml
+
+# --- OS generated files ---
+.DS_Store
+Thumbs.db
+__MACOSX/
+
+# --- Logs, coverage, temp files ---
+*.log
+coverage.out
+*.tmp
+*.swp
+*~
+
+# --- IDE / editor configs ---
+.vscode/
+.idea/
+*.iml
+
+# --- Terraform (if you pull in infra) ---
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# --- Kubernetes client configs (local) ---
+.kube/
+.kubectl/
+
+# --- Miscellaneous backups & archives ---
+*.zip
+*.tar.gz
+*.rar
