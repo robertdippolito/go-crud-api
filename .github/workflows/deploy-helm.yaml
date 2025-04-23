@@ -29,6 +29,6 @@ jobs:
             --namespace api \
             --create-namespace \
             --values ./_infra/k8s-api-chart/values.yaml \
-            --set image.tag=${{ github.sha }} \
+            --set image.tag=latest \
             --set ingress.hosts[0].host=${{ secrets.INGRESS_HOST }} \
             --set image.repository=${{ secrets.ECR_REPOSITORY }}
