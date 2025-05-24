@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: ${{ vars.GITOPS_REPO }}    
-          token: ${{ secrets.GITHUB_TOKEN }}    
+          token: ${{ secrets.GITOPS_TOKEN }}    
           path: gitops
 
       # 3. Install Helm CLI
