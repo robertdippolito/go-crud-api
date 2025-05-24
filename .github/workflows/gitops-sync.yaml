@@ -1,0 +1,52 @@
+name: Sync k8s-API Manifests to GitOps Repo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  render-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout this k8s-api repo
+      - name: Checkout k8s-api repo
+        uses: actions/checkout@v3
+
+      # 2. Checkout your GitOps repo
+      - name: Checkout GitOps repo
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ vars.GITOPS_REPO }}    
+          token: ${{ secrets.GITHUB_TOKEN }}    
+          path: gitops
+
+      # 3. Install Helm CLI
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+
+      # 4. Render chart into gitops/apps/k8s-api/k8s-api.yaml
+      - name: Render k8s-api manifests
+        run: |
+          mkdir -p gitops/apps/k8s-api
+          helm template k8s-api ./_infra/k8s-api-chart \
+            --namespace api \
+            --values ./_infra/k8s-api-chart/values.yaml \
+            --set image.tag=latest \
+            --set ingress.hosts[0].host=${{ secrets.INGRESS_HOST }} \
+            --set image.repository=${{ secrets.ECR_REPOSITORY }}
+          > gitops/apps/k8s-api/k8s-api.yaml
+
+      # 5. Commit & push only if changed
+      - name: Commit & Push changes
+        run: |
+          cd gitops
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add apps/k8s-api/k8s-api.yaml
+          if git diff --cached --quiet; then
+            echo "No manifest changes to push"
+          else
+            git commit -m "ci: sync k8s-api manifests @ ${{ github.sha }}"
+            git push origin main
+          fi
