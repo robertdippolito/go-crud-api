@@ -34,7 +34,7 @@ jobs:
             --values ./_infra/k8s-api-chart/values.yaml \
             --set image.tag=latest \
             --set ingress.hosts[0].host=${{ secrets.INGRESS_HOST }} \
-            --set image.repository=${{ secrets.ECR_REPOSITORY }}
+            --set image.repository=${{ secrets.ECR_REPOSITORY }} \
           > gitops/apps/k8s-api/k8s-api.yaml
 
       # 5. Commit & push only if changed
