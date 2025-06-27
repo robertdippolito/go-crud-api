@@ -23,6 +23,15 @@ jobs:
       - name: Setup Helm
         uses: azure/setup-helm@v3
 
+      - name: Deploy ingress-nginx
+        run: |
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+            --namespace ingress-nginx \
+            --create-namespace \
+            --version 4.7.1 \
+            --values ./_infra/ingress-nginx-values.yaml
+
       - name: Deploy Helm chart
         run: |
           helm upgrade --install k8s-api ./_infra/k8s-api-chart \
