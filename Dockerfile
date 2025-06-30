@@ -1,9 +1,7 @@
-# Use the official Go image as the base
 FROM golang:1.20
-# Set the working directory
+
 WORKDIR /usr/src/app
-# Copy the Go module files and download dependencies
-COPY go.mod ./
+COPY go.mod go.sum ./
 RUN go mod download
 # Copy the entire application code
 COPY . .
