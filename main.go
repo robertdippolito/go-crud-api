@@ -1,23 +1,28 @@
 package main
 
 import (
-	"encoding/json"
+	"log"
 	"net/http"
+	"os"
+
+	"k8s-api/db"
+
+	"github.com/joho/godotenv"
 )
 
-// Define a simple structure for the response
-type Response struct {
-	Message string `json:"message"`
-}
-
-// Handler function for the root endpoint
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-	response := Response{Message: "Hello, World!"}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
-}
-
 func main() {
-	http.HandleFunc("/", helloHandler) // Set up the route
-	http.ListenAndServe(":3000", nil)  // Start the server on port 3000
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	mongoURI := os.Getenv("MONGO_URI")
+	err = db.InitMongoDB(mongoURI)
+	if err != nil {
+		log.Fatal("Failed to connect to MongoDB", err)
+	}
+
+	r := NewRouter()
+	log.Println("Server running on :3000")
+	log.Fatal(http.ListenAndServe(":3000", r))
 }
