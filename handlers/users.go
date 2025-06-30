@@ -1,0 +1,58 @@
+package handlers
+
+import (
+	"context"
+	"encoding/json"
+	"net/http"
+	"os"
+	"time"
+
+	"k8s-api/db"
+
+	"go.mongodb.org/mongo-driver/bson"
+)
+
+type User struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	collection := db.Client.Database(os.Getenv("MONGO_DATABASE_NAME")).Collection(os.Getenv("MONGO_COLLECTION_NAME"))
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	cursor, err := collection.Find(ctx, bson.M{})
+	if err != nil {
+		http.Error(w, "Error fetching users", http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(ctx)
+
+	var users []User
+	if err := cursor.All(ctx, &users); err != nil {
+		http.Error(w, "Error decoding user", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
+}
+
+func CreateUser(w http.ResponseWriter, r *http.Request) {
+	var user User
+	_ = json.NewDecoder(r.Body).Decode(&user)
+
+	collection := db.Client.Database(os.Getenv("MONGO_DATABASE_NAME")).Collection(os.Getenv("MONGO_COLLECTION_NAME"))
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := collection.InsertOne(ctx, user)
+	if err != nil {
+		http.Error(w, "Failed to insert user", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(user)
+}

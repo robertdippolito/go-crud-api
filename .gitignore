@@ -51,3 +51,16 @@ coverage.out
 *.zip
 *.tar.gz
 *.rar
+# --- Go hot reload tools ---
+.air.toml
+tmp/
+
+# --- Misc Go binaries ---
+*.bin
+
+# --- JetBrains GoLand IDE (optional) ---
+.goland/
+
+# --- Node (if frontend used alongside) ---
+node_modules/
+dist/
