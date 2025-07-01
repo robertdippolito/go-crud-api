@@ -29,3 +29,5 @@ ingress:
 namespace: api
 fullnameOverride: "k8s-api"
 envFromSecret: ""
+aws:
+  region: us-east-1
