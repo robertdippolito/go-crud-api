@@ -92,7 +92,9 @@ jobs:
           git add apps/k8s-api/deployment.yaml \
                   apps/k8s-api/service.yaml \
                   apps/k8s-api/ingress.yaml \
-                  apps/ingress-nginx/all.yaml
+                  apps/k8s-api/clustersecretstore.yaml \
+                  apps/k8s-api/externalsecret.yaml \
+                  apps/ingress-nginx/all.yaml 
 
           if git diff --cached --quiet; then
             echo "No manifest changes to push"
