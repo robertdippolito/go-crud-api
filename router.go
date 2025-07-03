@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func NewRouter() *mux.Router {
+func NewRouter(handlers *handlers.Handler) *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/", handlers.GetHealth).Methods("GET")
 	r.HandleFunc("/users", handlers.GetUsers).Methods("GET")

@@ -5,24 +5,38 @@ import (
 	"net/http"
 	"os"
 
+	"k8s-api/config"
 	"k8s-api/db"
+	"k8s-api/handlers"
 
-	"github.com/joho/godotenv"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	mongoURI := os.Getenv("MONGO_URI")
+	mongoDB := os.Getenv("MONGO_DATABASE_NAME")
+	mongoCollection := os.Getenv("MONGO_COLLECTION_NAME")
+
+	if mongoURI == "" || mongoDB == "" || mongoCollection == "" {
+		log.Fatal("Required environment variables are missing")
 	}
 
-	mongoURI := os.Getenv("MONGO_URI")
-	err = db.InitMongoDB(mongoURI)
+	err := db.InitMongoDB(mongoURI)
 	if err != nil {
 		log.Fatal("Failed to connect to MongoDB", err)
 	}
 
-	r := NewRouter()
+	conf := &config.AppConfig{
+		MongoDatabase:   mongoDB,
+		MongoCollection: mongoCollection,
+	}
+
+	h := &handlers.Handler{Config: conf}
+
+	router := mux.NewRouter()
+	router.HandleFunc("/users", h.GetUsers).Methods("GET")
+	router.HandleFunc("/users", h.CreateUser).Methods("POST")
+
 	log.Println("Server running on :3000")
-	log.Fatal(http.ListenAndServe(":3000", r))
+	log.Fatal(http.ListenAndServe(":3000", router))
 }
