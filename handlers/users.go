@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"os"
 	"time"
 
 	"k8s-api/db"
@@ -18,8 +17,8 @@ type User struct {
 	Email string `json:"email"`
 }
 
-func GetUsers(w http.ResponseWriter, r *http.Request) {
-	collection := db.Client.Database(os.Getenv("MONGO_DATABASE_NAME")).Collection(os.Getenv("MONGO_COLLECTION_NAME"))
+func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) {
+	collection := db.Client.Database(h.Config.MongoDatabase).Collection(h.Config.MongoCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -39,11 +38,11 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(users)
 }
 
-func CreateUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user User
 	_ = json.NewDecoder(r.Body).Decode(&user)
 
-	collection := db.Client.Database(os.Getenv("MONGO_DATABASE_NAME")).Collection(os.Getenv("MONGO_COLLECTION_NAME"))
+	collection := db.Client.Database(h.Config.MongoDatabase).Collection(h.Config.MongoCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 

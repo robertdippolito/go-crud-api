@@ -14,7 +14,7 @@ type Result struct {
 	Sum float32 `json:"sum"`
 }
 
-func Compute(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Compute(w http.ResponseWriter, r *http.Request) {
 	var calc Calculation
 	err := json.NewDecoder(r.Body).Decode(&calc)
 	if err != nil {
