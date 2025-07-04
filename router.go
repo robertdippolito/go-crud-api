@@ -6,12 +6,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func NewRouter() *mux.Router {
+func NewRouter(h *handlers.Handler) *mux.Router {
 	r := mux.NewRouter()
-	r.HandleFunc("/", handlers.GetHealth).Methods("GET")
-	r.HandleFunc("/users", handlers.GetUsers).Methods("GET")
-	r.HandleFunc("/users", handlers.CreateUser).Methods("POST")
-	r.HandleFunc("/compute", handlers.Compute).Methods("POST")
+	r.HandleFunc("/", h.GetHealth).Methods("GET")
+	r.HandleFunc("/users", h.GetUsers).Methods("GET")
+	r.HandleFunc("/users", h.CreateUser).Methods("POST")
+	r.HandleFunc("/compute", h.Compute).Methods("POST")
 
 	return r
 }
