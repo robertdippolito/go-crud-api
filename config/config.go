@@ -20,6 +20,12 @@ func LoadConfig() *AppConfig {
 		Env:             os.Getenv("ENV"),
 	}
 
+	log.Println("Config values:")
+	log.Printf("  MONGODB_URI: %t\n", cfg.MongoURI != "")
+	log.Printf("  MONGODB_DATABASE_NAME: %t\n", cfg.MongoDatabase != "")
+	log.Printf("  MONGODB_COLLECTION_NAME: %t\n", cfg.MongoCollection != "")
+	log.Printf("  ENV: %s\n", cfg.Env)
+
 	if cfg.MongoURI == "" || cfg.MongoDatabase == "" || cfg.MongoCollection == "" {
 		log.Fatal("Missing required environment variables")
 	}
