@@ -18,6 +18,20 @@ ingress:
   hosts:
     - host: api.example.com
       paths:
+        - path: /users
+          pathType: Prefix
+          backend:
+            service:
+              name: k8s-api
+              port:
+                number: 80
+        - path: /compute
+          pathType: Prefix
+          backend:
+            service:
+              name: k8s-api
+              port:
+                number: 80
         - path: /
           pathType: Prefix
           backend:
