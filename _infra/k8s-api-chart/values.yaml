@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: account-number.dkr.ecr.region.amazonaws.com/my/api
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
   type: ClusterIP
