@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"encoding/json"
+	"math"
 	"net/http"
+	"time"
 )
 
 type Calculation struct {
@@ -26,4 +28,12 @@ func (h *Handler) Compute(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(result)
+}
+
+func (h *Handler) BurnTest(w http.ResponseWriter, r *http.Request) {
+	end := time.Now().Add(1 * time.Second)
+	for time.Now().Before(end) {
+		math.Sqrt(12345.6789)
+	}
+	w.Write([]byte("done"))
 }
