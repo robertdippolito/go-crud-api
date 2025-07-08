@@ -1,26 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: {{ include "k8s-api-chart.fullname" . }}
-    namespace: {{ .Values.namespace }}
+  name: {{ include "k8s-api-chart.fullname" . }}
+  namespace: {{ .Values.namespace }}
 spec:
-    replicas: {{ .Values.replicaCount }}
-    selector:
-        matchLabels:
-            app: {{ include "k8s-api-chart.fullname" . }}
-    template:
-        metadata:
-            labels:
-                app: {{ include "k8s-api-chart.fullname" . }}
-        spec:
-            containers:
-            - name: {{ include "k8s-api-chart.fullname" . }}
-              image: "{{ .Values.image.repository }}:{{ .Values.image.tag}}"
-              imagePullPolicy: {{ .Values.image.pullPolicy }}
-              ports:
-              - containerPort: {{ .Values.service.targetPort }}
-{{- if .Values.envFromSecret }}
-              envFrom:
-              - secretRef:
-                  name: {{ .Values.envFromSecret }}
-{{- end }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "k8s-api-chart.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "k8s-api-chart.fullname" . }}
+    spec:
+      containers:
+        - name: {{ include "k8s-api-chart.fullname" . }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+          {{- if .Values.envFromSecret }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.envFromSecret }}
+          {{- end }}

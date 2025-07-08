@@ -5,6 +5,14 @@ image:
   tag: latest
   pullPolicy: Always
 
+resources:
+  requests:
+    cpu: "200m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
 service:
   type: ClusterIP
   port: 80
