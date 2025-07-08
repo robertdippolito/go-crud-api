@@ -68,7 +68,6 @@ jobs:
           mv "$TMP_OUT"/k8s-api/templates/deployment.yaml gitops/apps/k8s-api/deployment.yaml
           mv "$TMP_OUT"/k8s-api/templates/service.yaml    gitops/apps/k8s-api/service.yaml
           mv "$TMP_OUT"/k8s-api/templates/ingress.yaml    gitops/apps/k8s-api/ingress.yaml
-          mv "$TMP_OUT"/k8s-api/templates/clustersecretstore.yaml    gitops/apps/k8s-api/clustersecretstore.yaml
           mv "$TMP_OUT"/k8s-api/templates/externalsecret.yaml    gitops/apps/k8s-api/externalsecret.yaml
 
           # 4d. Clean up the temporary folder
@@ -92,7 +91,6 @@ jobs:
           git add apps/k8s-api/deployment.yaml \
                   apps/k8s-api/service.yaml \
                   apps/k8s-api/ingress.yaml \
-                  apps/k8s-api/clustersecretstore.yaml \
                   apps/k8s-api/externalsecret.yaml \
                   apps/ingress-nginx/all.yaml 
 
