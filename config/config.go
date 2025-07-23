@@ -14,7 +14,7 @@ type AppConfig struct {
 
 func LoadConfig() *AppConfig {
 	cfg := &AppConfig{
-		MongoURI:        os.Getenv("MONGODB_URI_"),
+		MongoURI:        os.Getenv("MONGODB_URI"),
 		MongoDatabase:   os.Getenv("MONGODB_DATABASE_NAME"),
 		MongoCollection: os.Getenv("MONGODB_COLLECTION_NAME"),
 		Env:             os.Getenv("ENV"),
