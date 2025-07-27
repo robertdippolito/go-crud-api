@@ -42,6 +42,8 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          IMAGE_DIGEST=$(docker inspect --format='{{ index .RepoDigests 0 }}' $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG | cut -d'@' -f2)
+          echo "IMAGE_DIGEST=$IMAGE_DIGEST" >> "$GITHUB_ENV"
 
       # 3. Install Helm CLI
       - name: Set up Helm
@@ -58,7 +60,7 @@ jobs:
           helm template k8s-api ./_infra/k8s-api-chart \
             --namespace api \
             --values ./_infra/k8s-api-chart/values.yaml \
-            --set image.tag=latest \
+            --set image.digest=$IMAGE_DIGEST \
             --set ingress.hosts[0].host=${{ secrets.INGRESS_HOST }} \
             --set image.repository=${{ secrets.ECR_REPOSITORY }} \
             --output-dir "$TMP_OUT"
@@ -99,6 +101,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No manifest changes to push"
           else
-            git commit -m "ci: sync k8s-api manifests @ ${{ github.sha }}"
+            git commit -m "ci: sync k8s-api manifests ${IMAGE_DIGEST}"
             git push origin main
           fi
