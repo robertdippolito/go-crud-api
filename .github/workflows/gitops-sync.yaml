@@ -1,6 +1,5 @@
 name: Sync k8s-API Manifests to GitOps Repo
 
-# <-- Make sure this 'on:' is at the very left margin (no indent).
 on:
   push:
     branches:
@@ -10,11 +9,9 @@ jobs:
   render-and-push:
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout this k8s-api repo
       - name: Checkout k8s-api repo
         uses: actions/checkout@v3
 
-      # 2. Checkout your GitOps repo
       - name: Checkout GitOps repo
         uses: actions/checkout@v3
         with:
@@ -22,7 +19,6 @@ jobs:
           token:      ${{ secrets.GITOPS_TOKEN }}
           path:       gitops
 
-      # 3. Configure AWS Credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -42,12 +38,12 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          IMAGE_DIGEST=$(docker inspect --format='{{ index .RepoDigests 0 }}' $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG | cut -d'@' -f2)
+          echo "IMAGE_DIGEST=$IMAGE_DIGEST" >> "$GITHUB_ENV"
 
-      # 3. Install Helm CLI
       - name: Set up Helm
         uses: azure/setup-helm@v3
 
-      # 4. Render chart into individual files under gitops/apps/k8s-api
       - name: Render k8s-api manifests as individual files
         run: |
           # 4a. Create a temporary output directory
@@ -58,7 +54,7 @@ jobs:
           helm template k8s-api ./_infra/k8s-api-chart \
             --namespace api \
             --values ./_infra/k8s-api-chart/values.yaml \
-            --set image.tag=latest \
+            --set image.digest=$IMAGE_DIGEST \
             --set ingress.hosts[0].host=${{ secrets.INGRESS_HOST }} \
             --set image.repository=${{ secrets.ECR_REPOSITORY }} \
             --output-dir "$TMP_OUT"
@@ -99,6 +95,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No manifest changes to push"
           else
-            git commit -m "ci: sync k8s-api manifests @ ${{ github.sha }}"
+            git commit -m "ci: sync k8s-api manifests ${IMAGE_DIGEST}"
             git push origin main
           fi

@@ -23,13 +23,26 @@ jobs:
       - name: Setup Helm
         uses: azure/setup-helm@v3
 
+      - name: Pull Image Hash
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Fetch image digest
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+        run: |
+          REPO_NAME=${ECR_REPOSITORY#*.amazonaws.com/}
+          IMAGE_DIGEST=$(aws ecr describe-images --repository-name "$REPO_NAME" --image-ids imageTag=latest --query 'imageDetails[0].imageDigest' --output text)
+          echo "IMAGE_DIGEST=$IMAGE_DIGEST" >> "$GITHUB_ENV"
+
       - name: Deploy Helm chart
         run: |
           helm upgrade --install k8s-api ./_infra/k8s-api-chart \
             --namespace api \
             --create-namespace \
             --values ./_infra/k8s-api-chart/values.yaml \
-            --set image.tag=latest \
+            --set image.digest=$IMAGE_DIGEST \
             --set ingress.hosts[0].host=${{ secrets.INGRESS_HOST }} \
             --set image.repository=${{ secrets.ECR_REPOSITORY }}
 
