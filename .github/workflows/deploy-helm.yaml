@@ -23,7 +23,7 @@ jobs:
       - name: Setup Helm
         uses: azure/setup-helm@v3
 
-      - name: Login to ECR
+      - name: Pull Image Hash
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
