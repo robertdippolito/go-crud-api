@@ -75,7 +75,6 @@ This application has 2 simple endpoints ```/users``` and ```/compute```. The def
 The `_infra/k8s-api-chart/templates` folder contains the Kubernetes manifests for running the API on EKS. Each template defines a key object used in the cluster.
 <img width="750" alt="Kubernetes resources for API" src="./assets/ingress-architecture.png">
 ### Ingress Object
-### Deplyment Object
 Routes external HTTP traffic into the cluster and directs requests to the service based on host and path rules.
 ### Deployment Object
 Specifies the desired number of API pods and enables rolling updates so Kubernetes keeps the application available.
