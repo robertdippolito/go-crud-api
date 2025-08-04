@@ -47,15 +47,43 @@ External-secrets are used to store your credentials to be used for remote develo
    
 ## 🗒️ API Endpoints
 This application has 2 simple endpoints ```/users``` and ```/compute```. The default route ```/``` returns a simple string. 
+- `GET /` is a basic health check that confirms the API is running and responsive.
+
+  ```bash
+  curl http://localhost:8000/
+  ```
+
+- `/users` works with the user collection in MongoDB. `GET` returns all stored users, while `POST` adds a new user from the request body.
+
+  ```bash
+  curl http://localhost:8000/users
+  curl -X POST http://localhost:8000/users \
+    -H "Content-Type: application/json" \
+    -d '{"id":1,"name":"john","email":"john@example.com"}'
+  ```
+
+- `/compute` handles simple math and load tests. `POST` sums two numbers supplied in JSON, and `GET` burns CPU for a second before replying.
+
+  ```bash
+  curl http://localhost:8000/compute
+  curl -X POST http://localhost:8000/compute \
+    -H "Content-Type: application/json" \
+    -d '{"x":2,"y":3}'
+  ```
 
 ## 🕸️ _infra Directory
-The _infra directory contains the Kubernetes objects used to run the API in the EKS Cluster. The diagram below highlights each of the Kubernetes objects running in the cluster and the text below explains each:
-TODO: insert diagram
+The `_infra/k8s-api-chart/templates` folder contains the Kubernetes manifests for running the API on EKS. Each template defines a key object used in the cluster.
+<img width="750" alt="Kubernetes resources for API" src="./assets/ingress-architecture.png">
 ### Ingress Object
-### Deplyment Object
+Routes external HTTP traffic into the cluster and directs requests to the service based on host and path rules.
+### Deployment Object
+Specifies the desired number of API pods and enables rolling updates so Kubernetes keeps the application available.
 ### Service Object
+Provides a stable network endpoint for the pods and load-balances traffic across them inside the cluster.
 ### Horizontal Pod Autoscaler (HPA) Object
+Watches resource usage and automatically scales the deployment up or down to match demand.
 ### External Secrets Object
+Fetches secrets from AWS Secrets Manager and exposes them as Kubernetes secrets for the pods to consume.
 
 ## 📃 License 
 As much as possible I'd like to encourage participation and collaboration. This code is open-source software licensed under [Apache 2.0 License](https://github.com/gowebly/gowebly/blob/main/LICENSE), created and supported by [Robert D'Ippolito](https://robertdippolito.me) for people and robots.
