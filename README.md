@@ -85,12 +85,6 @@ Watches resource usage and automatically scales the deployment up or down to mat
 ### External Secrets Object
 Fetches secrets from AWS Secrets Manager and exposes them as Kubernetes secrets for the pods to consume.
 
-### Ingress Object
-### Deplyment Object
-### Service Object
-### Horizontal Pod Autoscaler (HPA) Object
-### External Secrets Object
-
 ## 📃 License 
 As much as possible I'd like to encourage participation and collaboration. This code is open-source software licensed under [Apache 2.0 License](https://github.com/gowebly/gowebly/blob/main/LICENSE), created and supported by [Robert D'Ippolito](https://robertdippolito.me) for people and robots.
 
