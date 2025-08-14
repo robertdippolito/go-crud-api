@@ -15,7 +15,7 @@ This repository is part of a multi-repository experiment designed to test Kubern
 
 Videos related to this repository can be found here:
 
-<a href="www.youtube.com/@RobOps101">![image](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white) </a>
+<a href="https://www.youtube.com/@RobOps101">![image](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white) </a>
 
 ## 🔥 Getting Started
 This API connects to MongoDB on start up. In order to run this application locally you will need to have a MongoDB Atlas cluster setup. To do this, see the instructions [here](todo) on how to set up a **free** MongoDB Atlas cluster. In additon to having a MongoDB cluster you also need to have [Go installed](https://go.dev/learn/) on your computer. Once your cluster is up and running and you will need to execute the following steps:
