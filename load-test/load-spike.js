@@ -25,7 +25,7 @@ export let options = {
 export default function () {
   let res;
 
-  res = http.get(`${__ENV.API_URL}/compute`, {
+  res = http.get(`https://api.anytimeagile.com/compute`, {
     headers: { 
       'Cache-Control': 'no-cache, no-store, must-revalidate' 
     }
