@@ -10,5 +10,5 @@ type Response struct {
 }
 
 func (h *Handler) GetHealth(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(Response{Message: "I am healthy!"})
+	json.NewEncoder(w).Encode(Response{Message: "I am healthy! HELLO YOUTUBE"})
 }
