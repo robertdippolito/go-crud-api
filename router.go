@@ -13,6 +13,7 @@ func NewRouter(h *handlers.Handler) *mux.Router {
 	r.HandleFunc("/users", h.CreateUser).Methods("POST")
 	r.HandleFunc("/compute", h.Compute).Methods("POST")
 	r.HandleFunc("/compute", h.BurnTest).Methods("GET")
+	r.HandleFunc("/s3/{key}", h.GetS3Object).Methods("GET")
 
 	return r
 }

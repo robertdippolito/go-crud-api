@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
@@ -9,6 +10,8 @@ import (
 	"k8s-api/db"
 	"k8s-api/handlers"
 
+	awscfg "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/joho/godotenv"
 )
 
@@ -25,9 +28,17 @@ func main() {
 
 	conf := config.LoadConfig()
 
-	handler := &handlers.Handler{Config: conf}
+	awsCfg, err := awscfg.LoadDefaultConfig(context.Background())
+	if err != nil {
+		log.Fatal("Failed to load AWS configuration", err)
+	}
 
-	err := db.InitMongoDB(conf.MongoURI)
+	handler := &handlers.Handler{
+		Config:   conf,
+		S3Client: s3.NewFromConfig(awsCfg),
+	}
+
+	err = db.InitMongoDB(conf.MongoURI)
 	if err != nil {
 		log.Fatal("Failed to connect to MongoDB", err)
 	}
