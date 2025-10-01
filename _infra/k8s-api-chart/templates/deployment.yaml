@@ -12,7 +12,12 @@ spec:
     metadata:
       labels:
         app: {{ include "k8s-api-chart.fullname" . }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
+      serviceAccountName: {{ include "k8s-api-chart.serviceAccountName" . }}
       containers:
         - name: {{ include "k8s-api-chart.fullname" . }}
 {{- if .Values.image.digest }}
@@ -21,12 +26,18 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
 {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.resources }}
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           ports:
             - containerPort: {{ .Values.service.targetPort }}
           {{- if .Values.envFromSecret }}
           envFrom:
             - secretRef:
                 name: {{ .Values.envFromSecret }}
+          {{- end }}
+          {{- with .Values.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
           {{- end }}

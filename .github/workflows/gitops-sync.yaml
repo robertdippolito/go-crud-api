@@ -66,6 +66,7 @@ jobs:
           mv "$TMP_OUT"/k8s-api/templates/hpa.yaml    gitops/apps/k8s-api/hpa.yaml
           mv "$TMP_OUT"/k8s-api/templates/ingress.yaml    gitops/apps/k8s-api/ingress.yaml
           mv "$TMP_OUT"/k8s-api/templates/externalsecret.yaml    gitops/apps/k8s-api/externalsecret.yaml
+          mv "$TMP_OUT"/k8s-api/templates/serviceaccount.yaml    gitops/apps/k8s-api/serviceaccount.yaml
 
           # 4d. Clean up the temporary folder
           rm -rf "$TMP_OUT"
@@ -90,6 +91,7 @@ jobs:
                   apps/k8s-api/hpa.yaml \
                   apps/k8s-api/ingress.yaml \
                   apps/k8s-api/externalsecret.yaml \
+                  apps/k8s-api/serviceaccount.yaml \
                   apps/ingress-nginx/all.yaml 
 
           if git diff --cached --quiet; then
