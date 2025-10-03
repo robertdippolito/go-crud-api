@@ -19,7 +19,7 @@ func LoadConfig() *AppConfig {
 		MongoDatabase:   os.Getenv("MONGODB_DATABASE_NAME"),
 		MongoCollection: os.Getenv("MONGODB_COLLECTION_NAME"),
 		Env:             os.Getenv("ENV"),
-		S3Bucket:        "my-cross-account-bucket-09302025",
+		S3Bucket:        "my-cross-account-bucket-10032025",
 	}
 
 	if cfg.MongoURI == "" || cfg.MongoDatabase == "" || cfg.MongoCollection == "" {
