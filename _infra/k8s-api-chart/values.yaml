@@ -29,7 +29,7 @@ serviceAccount:
   create: true
   name: "api-sa"
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::802594765618:role/aws-cross-account-s3
+    eks.amazonaws.com/role-arn: arn:aws:iam::802594765618:role/EKS-Cross-Account-S3-api-sa
 
 ingress:
   enabled: true
@@ -66,11 +66,3 @@ fullnameOverride: "k8s-api"
 envFromSecret: "k8s-api-env"
 aws:
   region: us-east-1
-
-env:
-  - name: AWS_REGION
-    value: us-east-1
-  - name: S3_BUCKET
-    value: my-bucket-demo-123
-  - name: S3_PREFIX
-    value: app/
